@@ -7,6 +7,11 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+  :root {
+    --canvas-size: 90vw;
+    --max-canvas-size: 360px;
+  }
+
   body {
     margin: 0;
     font-family: 'Press Start 2P', monospace;
@@ -15,11 +20,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     height: 100vh;
-	justify-content: center;
   }
 
   canvas {
+    width: min(var(--canvas-size), var(--max-canvas-size));
+    height: auto;
     border: 3px solid white;
     background: #000;
     image-rendering: pixelated;
@@ -29,7 +36,7 @@
     margin-top: 10px;
     font-size: 10px;
     color: #87cefa;
-    max-width: 200px;
+    max-width: 80vw;
     text-align: center;
   }
 
@@ -40,7 +47,7 @@
     transform: translate(-50%, -50%);
     background: black;
     border: 2px solid white;
-    padding: 10px 200px;
+    padding: 10px 20px;
     font-size: 10px;
     text-align: center;
     display: none;
@@ -67,7 +74,7 @@
 </head>
 <body>
 
-<canvas id="maze" width="300" height="300"></canvas>
+<canvas id="maze" width="400" height="400"></canvas>
 <div id="instructions">Use arrow keys to move the white square to reach Aria.</div>
 <div id="celebrateMsg">CONGRATULATIONS! YOU MADE IT!</div>
 <button id="resetBtn">Reset Game</button>
@@ -75,7 +82,6 @@
 <script>
   const canvas = document.getElementById("maze");
   const ctx = canvas.getContext("2d");
-  const tileSize = 20;
   const celebrateMsg = document.getElementById('celebrateMsg');
 
   const avatarImg = new Image();
@@ -107,8 +113,17 @@
   let player = { x: 1, y: 1 };
   let gameOver = false;
 
+  function resizeCanvas() {
+    const displayWidth = Math.min(window.innerWidth * 0.9, 360);
+    canvas.width = displayWidth;
+    canvas.height = displayWidth;
+    drawMaze();
+  }
+
   function drawMaze() {
+    const tileSize = canvas.width / maze[0].length;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     for (let y = 0; y < maze.length; y++) {
       for (let x = 0; x < maze[y].length; x++) {
         const px = x * tileSize;
@@ -116,9 +131,6 @@
         if (maze[y][x] === 1) {
           ctx.fillStyle = "#666";
           ctx.fillRect(px, py, tileSize, tileSize);
-          ctx.strokeStyle = "black";
-          ctx.lineWidth = 2;
-          ctx.strokeRect(px+1, py+1, tileSize-2, tileSize-2);
         } else if (maze[y][x] === 2) {
           ctx.fillStyle = "#000";
           ctx.fillRect(px, py, tileSize, tileSize);
@@ -126,19 +138,15 @@
         } else {
           ctx.fillStyle = "#000";
           ctx.fillRect(px, py, tileSize, tileSize);
-          ctx.strokeStyle = "#222";
-          ctx.lineWidth = 1;
-          ctx.strokeRect(px, py, tileSize, tileSize);
         }
       }
     }
 
     // Player
+    const px = player.x * tileSize;
+    const py = player.y * tileSize;
     ctx.fillStyle = "white";
-    ctx.fillRect(player.x * tileSize, player.y * tileSize, tileSize, tileSize);
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(player.x * tileSize + 1, player.y * tileSize + 1, tileSize - 2, tileSize - 2);
+    ctx.fillRect(px, py, tileSize, tileSize);
   }
 
   function celebrateAndRedirect() {
@@ -177,7 +185,10 @@
     drawMaze();
   });
 
-  avatarImg.onload = drawMaze;
+  avatarImg.onload = () => {
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+  };
 </script>
-
 </body>
+</html>
