@@ -59,7 +59,6 @@
   const ctx = canvas.getContext("2d");
   const tileSize = 40;
 
-  // Maze grid: 1=wall, 0=path, 2=finish
   const maze = [
     [1,1,1,1,1,1,1,1,1,1],
     [1,0,0,0,1,0,0,0,0,1],
@@ -91,15 +90,11 @@
         const px = x * tileSize;
         const py = y * tileSize;
         if (maze[y][x] === 1) {
-          // Wall: dark grey block with black border for pixel style
           drawPixelRect(px, py, tileSize, "#666", "black");
         } else if (maze[y][x] === 2) {
-          // Finish tile: bright green with white pixel border
           drawPixelRect(px, py, tileSize, "#0f0", "white");
-          // Draw a simple pixel heart in center
           drawHeart(px + tileSize/2, py + tileSize/2, 10, "#b22222");
         } else {
-          // Path: solid black tile with thin grey outline
           ctx.fillStyle = "#000";
           ctx.fillRect(px, py, tileSize, tileSize);
           ctx.strokeStyle = "#222";
@@ -108,17 +103,14 @@
         }
       }
     }
-    // Draw player as white block with black pixel border
     drawPixelRect(player.x * tileSize, player.y * tileSize, tileSize, "white", "black");
   }
 
-  // Draw a simple pixel heart shape centered at (cx, cy) with size s and color fillColor
   function drawHeart(cx, cy, s, fillColor) {
     ctx.fillStyle = fillColor;
     const size = s;
-    // Pixels for heart shape relative positions (like a pixel art heart)
     const pixels = [
-      [-1, 0], [0, -1], [1, 0], [0, 1], // cross shape
+      [-1, 0], [0, -1], [1, 0], [0, 1],
       [-1, -1], [1, -1], [-1, 1], [1, 1],
       [0, 0]
     ];
@@ -138,7 +130,6 @@
 
       if (maze[player.y][player.x] === 2) {
         gameOver = true;
-        // Redirect to #lovequizcorrect
         window.location.href = "#lovequizcorrect";
       }
     }
