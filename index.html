@@ -17,6 +17,8 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    user-select: none;
+    position: relative;
   }
   canvas {
     border: 4px solid white;
@@ -29,13 +31,6 @@
     color: #87cefa;
     max-width: 400px;
     text-align: center;
-  }
-  #celebrateMsg {
-    margin-top: 12px;
-    font-size: 14px;
-    color: #b22222;
-    font-weight: bold;
-    display: none;
   }
   button {
     margin-top: 12px;
@@ -53,19 +48,35 @@
     background: white;
     color: black;
   }
+  #celebration {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: black;
+    border: 3px solid white;
+    padding: 20px 30px;
+    font-size: 14px;
+    text-align: center;
+    display: none;
+    z-index: 10;
+    white-space: nowrap;
+  }
 </style>
 </head>
 <body>
 
 <canvas id="maze" width="400" height="400"></canvas>
 <div id="instructions">Use arrow keys to move the white square to the green finish tile.</div>
-<div id="celebrateMsg">🎉 You made it to the end! Redirecting... 🎉</div>
 <button id="resetBtn">Reset Game</button>
+
+<div id="celebration">CONGRATULATIONS! YOU MADE IT!</div>
 
 <script>
   const canvas = document.getElementById("maze");
   const ctx = canvas.getContext("2d");
   const tileSize = 40;
+  const celebration = document.getElementById('celebration');
 
   // Maze grid: 1=wall, 0=path, 2=finish
   const maze = [
@@ -136,10 +147,9 @@
   }
 
   function celebrateAndRedirect() {
-    const msg = document.getElementById('celebrateMsg');
-    msg.style.display = 'block';
-    // After 2.5 seconds, send message to parent to redirect
+    celebration.style.display = 'block';
     setTimeout(() => {
+      // Send message to parent (Carrd page)
       window.parent.postMessage('mazeComplete', '*');
     }, 2500);
   }
@@ -151,31 +161,3 @@
     if (maze[newY][newX] !== 1) {
       player.x = newX;
       player.y = newY;
-      drawMaze();
-
-      if (maze[player.y][player.x] === 2) {
-        gameOver = true;
-        celebrateAndRedirect();
-      }
-    }
-  }
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowUp") move(0, -1);
-    else if (e.key === "ArrowDown") move(0, 1);
-    else if (e.key === "ArrowLeft") move(-1, 0);
-    else if (e.key === "ArrowRight") move(1, 0);
-  });
-
-  document.getElementById('resetBtn').addEventListener('click', () => {
-    player = { x: 1, y: 1 };
-    gameOver = false;
-    document.getElementById('celebrateMsg').style.display = 'none';
-    drawMaze();
-  });
-
-  drawMaze();
-</script>
-
-</body>
-</html>
