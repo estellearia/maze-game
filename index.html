@@ -16,7 +16,7 @@
     flex-direction: column;
     align-items: center;
     height: 100vh;
-    justify-content: center;
+	justify-content: center;
   }
 
   canvas {
@@ -29,7 +29,7 @@
     margin-top: 10px;
     font-size: 10px;
     color: #87cefa;
-    max-width: 280px;
+    max-width: 200px;
     text-align: center;
   }
 
@@ -40,7 +40,7 @@
     transform: translate(-50%, -50%);
     background: black;
     border: 2px solid white;
-    padding: 10px 20px;
+    padding: 10px 200px;
     font-size: 10px;
     text-align: center;
     display: none;
@@ -73,104 +73,111 @@
 <button id="resetBtn">Reset Game</button>
 
 <script>
-const canvas = document.getElementById("maze");
-const ctx = canvas.getContext("2d");
-const tileSize = 20;
-const celebrateMsg = document.getElementById('celebrateMsg');
+  const canvas = document.getElementById("maze");
+  const ctx = canvas.getContext("2d");
+  const tileSize = 20;
+  const celebrateMsg = document.getElementById('celebrateMsg');
 
-const avatarImg = new Image();
-avatarImg.src = "https://i.imgur.com/9OC7GRw.gif";
-  
-const maze = [
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,0,0,1,0,0,0,1,0,2,1],
-  [1,1,1,1,1,1,0,1,0,1,0,1,0,1,1],
-  [1,0,0,0,0,1,0,1,0,1,0,0,0,0,1],
-  [1,0,1,1,0,1,0,1,1,1,1,1,1,0,1],
-  [1,0,1,0,0,0,0,0,0,0,0,0,1,0,1],
-  [1,0,1,0,1,1,1,1,1,1,1,0,1,0,1],
-  [1,0,1,0,1,0,0,0,0,0,1,0,1,0,1],
-  [1,0,1,0,1,0,1,1,1,0,1,0,1,0,1],
-  [1,0,0,0,1,0,1,0,1,0,0,0,1,0,1],
-  [1,1,1,1,1,0,1,0,1,1,1,1,1,0,1],
-  [1,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
-  [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-];
+  const avatarImg = new Image();
+  avatarImg.src = "https://i.imgur.com/9OC7GRw.gif";
 
+  const maze = [
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,1,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1],
+    [1,0,1,0,1,0,1,1,1,1,0,1,0,1,1,1,1,1,0,1],
+    [1,0,1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1],
+    [1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1],
+    [1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,1],
+    [1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1],
+    [1,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,1],
+    [1,0,1,1,0,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1],
+    [1,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1],
+    [1,0,1,0,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1],
+    [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,1],
+    [1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1,0,1],
+    [1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,1],
+    [1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,0,1],
+    [1,0,1,0,0,1,0,0,0,0,0,1,0,0,0,1,0,1,0,1],
+    [1,0,1,0,1,1,1,1,1,1,0,1,1,1,0,1,0,1,0,1],
+    [1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,1,0,0,0,1],
+    [1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,2,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+  ];
 
-let player = { x: 1, y: 1 };
-let gameOver = false;
+  let player = { x: 1, y: 1 };
+  let gameOver = false;
 
-function drawMaze() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  for (let y = 0; y < maze.length; y++) {
-    for (let x = 0; x < maze[y].length; x++) {
-      const px = x * tileSize;
-      const py = y * tileSize;
-      if (maze[y][x] === 1) {
-        ctx.fillStyle = "#666";
-        ctx.fillRect(px, py, tileSize, tileSize);
-        ctx.strokeStyle = "black";
-        ctx.strokeRect(px+1, py+1, tileSize-2, tileSize-2);
-      } else if (maze[y][x] === 2) {
-        ctx.fillStyle = "#000";
-        ctx.fillRect(px, py, tileSize, tileSize);
-        ctx.drawImage(avatarImg, px + 2, py + 2, tileSize - 4, tileSize - 4);
-      } else {
-        ctx.fillStyle = "#000";
-        ctx.fillRect(px, py, tileSize, tileSize);
-        ctx.strokeStyle = "#222";
-        ctx.strokeRect(px, py, tileSize, tileSize);
+  function drawMaze() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let y = 0; y < maze.length; y++) {
+      for (let x = 0; x < maze[y].length; x++) {
+        const px = x * tileSize;
+        const py = y * tileSize;
+        if (maze[y][x] === 1) {
+          ctx.fillStyle = "#666";
+          ctx.fillRect(px, py, tileSize, tileSize);
+          ctx.strokeStyle = "black";
+          ctx.lineWidth = 2;
+          ctx.strokeRect(px+1, py+1, tileSize-2, tileSize-2);
+        } else if (maze[y][x] === 2) {
+          ctx.fillStyle = "#000";
+          ctx.fillRect(px, py, tileSize, tileSize);
+          ctx.drawImage(avatarImg, px + 2, py + 2, tileSize - 4, tileSize - 4);
+        } else {
+          ctx.fillStyle = "#000";
+          ctx.fillRect(px, py, tileSize, tileSize);
+          ctx.strokeStyle = "#222";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(px, py, tileSize, tileSize);
+        }
+      }
+    }
+
+    // Player
+    ctx.fillStyle = "white";
+    ctx.fillRect(player.x * tileSize, player.y * tileSize, tileSize, tileSize);
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(player.x * tileSize + 1, player.y * tileSize + 1, tileSize - 2, tileSize - 2);
+  }
+
+  function celebrateAndRedirect() {
+    celebrateMsg.style.display = 'block';
+    setTimeout(() => {
+      window.parent.postMessage('mazeComplete', '*');
+    }, 2500);
+  }
+
+  function move(dx, dy) {
+    if (gameOver) return;
+    const newX = player.x + dx;
+    const newY = player.y + dy;
+    if (maze[newY][newX] !== 1) {
+      player.x = newX;
+      player.y = newY;
+      drawMaze();
+      if (maze[newY][newX] === 2) {
+        gameOver = true;
+        celebrateAndRedirect();
       }
     }
   }
 
-  ctx.fillStyle = "white";
-  ctx.fillRect(player.x * tileSize, player.y * tileSize, tileSize, tileSize);
-  ctx.strokeStyle = "black";
-  ctx.strokeRect(player.x * tileSize + 1, player.y * tileSize + 1, tileSize - 2, tileSize - 2);
-}
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowUp") move(0, -1);
+    else if (e.key === "ArrowDown") move(0, 1);
+    else if (e.key === "ArrowLeft") move(-1, 0);
+    else if (e.key === "ArrowRight") move(1, 0);
+  });
 
-function celebrateAndRedirect() {
-  celebrateMsg.style.display = 'block';
-  setTimeout(() => {
-    window.parent.postMessage('mazeComplete', '*');
-  }, 2500);
-}
-
-function move(dx, dy) {
-  if (gameOver) return;
-  const newX = player.x + dx;
-  const newY = player.y + dy;
-  if (maze[newY][newX] !== 1) {
-    player.x = newX;
-    player.y = newY;
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    player = { x: 1, y: 1 };
+    gameOver = false;
+    celebrateMsg.style.display = 'none';
     drawMaze();
-    if (maze[newY][newX] === 2) {
-      gameOver = true;
-      celebrateAndRedirect();
-    }
-  }
-}
+  });
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowUp") move(0, -1);
-  else if (e.key === "ArrowDown") move(0, 1);
-  else if (e.key === "ArrowLeft") move(-1, 0);
-  else if (e.key === "ArrowRight") move(1, 0);
-});
-
-document.getElementById("resetBtn").addEventListener("click", () => {
-  player = { x: 1, y: 1 };
-  gameOver = false;
-  celebrateMsg.style.display = 'none';
-  drawMaze();
-});
-
-avatarImg.onload = drawMaze;
+  avatarImg.onload = drawMaze;
 </script>
 
 </body>
-</html>
