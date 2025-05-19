@@ -1,168 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maze Puzzle - Reaching Aria</title>
-  <style>
-    body {
-      background-color: black;
-      color: white;
-      font-family: 'Press Start 2P', cursive;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    canvas {
-      border: 2px solid white;
-      margin: 20px 0;
-    }
-    .dialogue-box {
-      background: black;
-      border: 2px solid white;
-      padding: 16px;
-      width: 90%;
-      max-width: 400px;
-      text-align: left;
-      font-size: 10px;
-      line-height: 1.6;
-    }
-    #nextBtn {
-      margin-top: 10px;
-      padding: 6px 10px;
-      background: white;
-      color: black;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 10px;
-      cursor: pointer;
-      border: none;
-    }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>3-Round Maze Game</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  body {
+    background: #000;
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    height: 100vh;
+    user-select: none;
+  }
+  h1 {
+    margin: 20px 0 5px;
+  }
+  #game-container {
+    position: relative;
+  }
+  canvas {
+    background: #222;
+    image-rendering: pixelated;
+    border: 4px solid #fff;
+    display: block;
+  }
+  #instructions {
+    margin: 10px 0 20px;
+    max-width: 600px;
+    font-size: 10px;
+    line-height: 1.2;
+  }
+  #round-info {
+    margin-bottom: 10px;
+  }
+  #congrats {
+    margin-top: 15px;
+    font-size: 12px;
+    color: #0f0;
+    display: none;
+  }
+</style>
 </head>
 <body>
-
-<div class="dialogue-box" id="dialogue">
-  <p id="dialogueText">You feel a pull in your soul... something—or someone—awaits.</p>
-  <button id="nextBtn" onclick="startMaze()">Start</button>
+<h1>Maze Challenge</h1>
+<div id="round-info">Round: 1 / 3</div>
+<div id="game-container">
+  <canvas id="maze" width="320" height="320"></canvas>
 </div>
-
-<canvas id="mazeCanvas" width="400" height="400" style="display:none;"></canvas>
+<div id="instructions">Use arrow keys to move Aria to the glowing tile!</div>
+<div id="congrats">🎉 Congratulations! You did it! 🎉</div>
 
 <script>
-const mazes = [
-  // Round 1: Simple
-  [
-    [1,1,1,1,1,1,1,1,1,1],
-    [1,0,0,0,1,0,0,0,0,1],
-    [1,0,1,0,1,0,1,1,0,1],
-    [1,0,1,0,0,0,0,1,0,1],
-    [1,0,1,1,1,1,0,1,0,1],
-    [1,0,0,0,0,1,0,0,0,1],
-    [1,1,1,1,0,1,1,1,0,1],
-    [1,0,0,1,0,0,0,1,0,1],
-    [1,0,1,1,1,1,0,1,0,1],
-    [1,1,1,1,1,1,1,1,1,1],
-  ],
-  // Round 2: Medium (based on image)
-  [
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,0,0,1,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,1],
-    [1,1,0,1,1,0,1,1,0,1,0,1,0,1,1,1,1,1,0,1],
-    [1,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,1,0,1],
-    [1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1],
-    [1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1],
-    [1,0,1,1,0,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1],
-    [1,0,1,1,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1],
-    [1,0,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  ],
-  // Round 3: Hard + Congratulations redirect
-  [
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,0,0,1,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,1],
-    [1,1,0,1,1,0,1,1,0,1,0,1,0,1,1,1,1,1,0,1],
-    [1,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,1,0,1],
-    [1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1],
-    [1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1],
-    [1,0,1,1,0,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1],
-    [1,0,1,1,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1],
-    [1,0,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  ]
-];
+(() => {
+  const canvas = document.getElementById('maze');
+  const ctx = canvas.getContext('2d');
+  const tileSize = 32;
+  const rows = 10;
+  const cols = 10;
 
-let round = 0;
-const canvas = document.getElementById("mazeCanvas");
-const ctx = canvas.getContext("2d");
-let player = {x:1, y:1};
+  // Aria avatar GIF URL (idle)
+  const ariaGifUrl = 'https://i.imgur.com/9OC7GRw.gif';
 
-function drawMaze(maze) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const cellSize = canvas.width / maze[0].length;
-  for (let y = 0; y < maze.length; y++) {
-    for (let x = 0; x < maze[0].length; x++) {
-      if (maze[y][x] === 1) {
-        ctx.fillStyle = "white";
-        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+  // Preload Aria avatar image
+  const ariaImg = new Image();
+  ariaImg.src = ariaGifUrl;
+
+  // Maze tile types:
+  // 0 = path (walkable)
+  // 1 = wall (not walkable)
+  // 2 = finish tile (goal)
+  
+  // Maze layouts for 3 rounds:
+  const mazes = [
+    // Round 1 - easiest
+    [
+      [1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,1,0,0,0,2,1],
+      [1,0,1,0,1,0,1,0,1,1],
+      [1,0,1,0,0,0,1,0,0,1],
+      [1,0,1,1,1,1,1,1,0,1],
+      [1,0,0,0,0,0,0,1,0,1],
+      [1,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,1,0,1,0,1],
+      [1,0,1,1,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Round 2 - medium difficulty (based on your provided maze)
+    [
+      [1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,1,0,0,2,1],
+      [1,0,1,1,0,1,0,1,1,1],
+      [1,0,1,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,0,0,1],
+      [1,1,1,0,1,0,1,1,0,1],
+      [1,0,0,0,0,0,1,0,0,1],
+      [1,0,1,1,1,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Round 3 - hardest + end round with congrats
+    [
+      [1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,1,0,0,0,1,2,1],
+      [1,0,1,1,0,1,0,1,1,1],
+      [1,0,1,0,0,1,0,0,0,1],
+      [1,0,1,0,1,1,1,1,0,1],
+      [1,0,0,0,1,0,0,1,0,1],
+      [1,1,1,0,1,0,1,1,0,1],
+      [1,0,0,0,0,0,1,0,0,1],
+      [1,0,1,1,1,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1],
+    ],
+  ];
+
+  // Player starting positions for each round
+  const starts = [
+    {x:1, y:1},
+    {x:1, y:1},
+    {x:1, y:1},
+  ];
+
+  let round = 0;
+  let playerPos = { ...starts[round] };
+  let gameOver = false;
+
+  // Draw maze grid
+  function drawMaze() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const maze = mazes[round];
+
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const tile = maze[y][x];
+        let color;
+        switch(tile) {
+          case 1: color = '#555'; break;       // wall
+          case 0: color = '#111'; break;       // path
+          case 2: color = '#0f0'; break;       // finish tile (green glowing)
+          default: color = '#111';
+        }
+        ctx.fillStyle = color;
+        ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+
+        // Optional grid lines for clarity
+        ctx.strokeStyle = '#222';
+        ctx.strokeRect(x * tileSize, y * tileSize, tileSize, tileSize);
+      }
+    }
+
+    // Draw Aria avatar on player position
+    if (ariaImg.complete) {
+      ctx.drawImage(ariaImg, playerPos.x * tileSize, playerPos.y * tileSize, tileSize, tileSize);
+    } else {
+      // fallback: draw a magenta square
+      ctx.fillStyle = '#f0f';
+      ctx.fillRect(playerPos.x * tileSize, playerPos.y * tileSize, tileSize, tileSize);
+    }
+  }
+
+  // Update round info text
+  function updateRoundInfo() {
+    document.getElementById('round-info').textContent = Round: ${round + 1} / ${mazes.length};
+  }
+
+  // Check if player reached finish tile
+  function checkFinish() {
+    if (mazes[round][playerPos.y][playerPos.x] === 2) {
+      round++;
+      if (round >= mazes.length) {
+        gameOver = true;
+        document.getElementById('congrats').style.display = 'block';
+        document.getElementById('instructions').textContent = "You've completed all rounds!";
+        // Redirect to #bridgecorrect after 2 seconds
+        setTimeout(() => {
+          window.location.hash = '#bridgecorrect';
+        }, 2000);
+      } else {
+        playerPos = { ...starts[round] };
+        updateRoundInfo();
+        drawMaze();
       }
     }
   }
-  drawPlayer(cellSize);
-}
 
-function drawPlayer(cellSize) {
-  ctx.fillStyle = "red";
-  ctx.fillRect(player.x * cellSize, player.y * cellSize, cellSize, cellSize);
-}
+  // Handle key presses for movement
+  function handleKey(e) {
+    if (gameOver) return;
+    let newX = playerPos.x;
+    let newY = playerPos.y;
 
-function startMaze() {
-  document.getElementById("dialogue").style.display = "none";
-  canvas.style.display = "block";
-  const currentMaze = mazes[round];
-  player = {x:1, y:1};
-  drawMaze(currentMaze);
-  window.addEventListener("keydown", handleKey);
-}
-
-function handleKey(e) {
-  const maze = mazes[round];
-  const dx = {ArrowLeft: -1, ArrowRight: 1, ArrowUp: 0, ArrowDown: 0};
-  const dy = {ArrowLeft: 0, ArrowRight: 0, ArrowUp: -1, ArrowDown: 1};
-  if (dx[e.key] !== undefined) {
-    const newX = player.x + dx[e.key];
-    const newY = player.y + dy[e.key];
-    if (maze[newY][newX] === 0) {
-      player.x = newX;
-      player.y = newY;
-      drawMaze(maze);
-      if (player.y === maze.length - 2 && player.x === maze[0].length - 2) {
-        window.removeEventListener("keydown", handleKey);
-        nextRound();
-      }
+    switch(e.key) {
+      case 'ArrowUp': newY--; break;
+      case 'ArrowDown': newY++; break;
+      case 'ArrowLeft': newX--; break;
+      case 'ArrowRight': newX++; break;
+      default: return;
     }
-  }
-}
 
-function nextRound() {
-  round++;
-  if (round >= mazes.length) {
-    window.location.href = "#youmadeit";
-  } else {
-    document.getElementById("dialogueText").innerText = round === 1
-      ? "You're getting closer... Can you feel it?"
-      : "Just a few more steps..."
-    document.getElementById("dialogue").style.display = "block";
-    canvas.style.display = "none";
-    document.getElementById("nextBtn").innerText = "Next";
+    // Check bounds and wall collisions
+    if (newX < 0 || newX >= cols || newY < 0 || newY >= rows) return;
+    if (mazes[round][newY][newX] === 1) return;
+
+    playerPos = { x: newX, y: newY };
+    drawMaze();
+    checkFinish();
   }
-}
+
+  // Initialize game
+  function init() {
+    updateRoundInfo();
+    drawMaze();
+    window.addEventListener('keydown', handleKey);
+  }
+
+  ariaImg.onload = () => {
+    init();
+  };
+})();
 </script>
-
 </body>
 </html>
