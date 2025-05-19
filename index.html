@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Maze Game - 2 Rounds</title>
+  <title>Maze Game</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
@@ -22,8 +22,6 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      overflow: hidden;
-      position: relative;
     }
 
     canvas {
@@ -91,57 +89,31 @@
 
     const avatarImg = new Image();
     avatarImg.src = "https://i.imgur.com/9OC7GRw.gif";
-
-    // Maze round 1 (original)
-    const maze1 = [
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-      [1,0,0,0,1,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1],
-      [1,0,1,0,1,0,1,1,1,1,0,1,0,1,1,1,1,1,0,1],
-      [1,0,1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1],
-      [1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1],
-      [1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,1],
-      [1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1],
-      [1,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,1],
-      [1,0,1,1,0,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1],
-      [1,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1],
-      [1,0,1,0,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1],
-      [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,1],
-      [1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1,0,1],
-      [1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,1],
-      [1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,0,1],
-      [1,0,1,0,0,1,0,0,0,0,0,1,0,0,0,1,0,1,0,1],
-      [1,0,1,0,1,1,1,1,1,1,0,1,1,1,0,1,0,1,0,1],
-      [1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,1,0,0,0,1],
-      [1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,2,1],
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-    ];
-
-    // Maze round 2 (more complex, from your image)
-    const maze2 = [
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-      [1,0,1,0,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,1],
-      [1,0,1,1,1,1,0,1,0,1,0,1,0,1,0,1,1,1,0,1],
-      [1,0,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,1,0,1],
-      [1,1,1,1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1],
-      [1,0,0,1,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,1],
-      [1,0,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1],
-      [1,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,1],
-      [1,1,1,1,0,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1],
-      [1,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1],
-      [1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1],
-      [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,1],
-      [1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1,0,1],
-      [1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,1],
-      [1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,0,1],
-      [1,0,1,0,0,1,0,0,0,0,0,1,0,0,0,1,0,1,0,1],
-      [1,0,1,0,1,1,1,1,1,1,0,1,1,1,0,1,0,1,0,1],
-      [1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,1,0,0,0,1],
-      [1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,2,1],
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-    ];
+    
+const maze = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,1,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1],
+  [1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,0,1,1,0,1],
+  [1,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,1,0,1],
+  [1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,0,1,0,1],
+  [1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,1,0,1],
+  [1,0,1,1,1,0,1,1,1,1,1,0,1,1,0,1,0,1,0,1],
+  [1,0,1,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,1],
+  [1,0,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1],
+  [1,0,1,0,1,0,0,0,1,0,0,1,0,0,0,0,0,1,0,1],
+  [1,0,1,0,1,0,1,0,1,1,0,1,1,1,1,1,0,1,0,1],
+  [1,0,0,0,1,0,1,0,0,1,0,0,0,0,0,1,0,1,0,1],
+  [1,1,1,0,1,0,1,1,0,1,1,1,1,1,0,1,0,1,0,1],
+  [1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,1],
+  [1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,0,1],
+  [1,0,1,0,0,1,0,0,0,0,0,1,0,0,0,1,0,1,0,1],
+  [1,0,1,0,1,1,1,1,1,1,0,1,1,1,0,1,0,1,0,1],
+  [1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,1,0,0,0,1],
+  [1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,2,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+];
 
     let player = { x: 1, y: 1 };
-    let currentMaze = maze1;
     let gameOver = false;
 
     function resizeCanvas() {
@@ -152,108 +124,84 @@
     }
 
     function drawMaze() {
-      const tileSize = canvas.width / currentMaze[0].length;
+      const tileSize = canvas.width / maze[0].length;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      for (let y = 0; y < currentMaze.length; y++) {
-        for (let x = 0; x < currentMaze[y].length; x++) {
+      for (let y = 0; y < maze.length; y++) {
+        for (let x = 0; x < maze[y].length; x++) {
           const px = x * tileSize;
           const py = y * tileSize;
-          const tile = currentMaze[y][x];
-          if (tile === 1) {
-            ctx.fillStyle = "#222"; // Walls dark gray
+
+          if (maze[y][x] === 1) {
+            ctx.fillStyle = "#666666";
             ctx.fillRect(px, py, tileSize, tileSize);
-          } else if (tile === 2) {
-            // Draw avatar image scaled to tile size
-            if (avatarImg.complete) {
-              ctx.drawImage(avatarImg, px, py, tileSize, tileSize);
-            } else {
-              avatarImg.onload = () => {
-                ctx.drawImage(avatarImg, px, py, tileSize, tileSize);
-              };
-            }
+            ctx.strokeStyle = "#000000";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(px + 1, py + 1, tileSize - 2, tileSize - 2);
+          } else if (maze[y][x] === 2) {
+            ctx.fillStyle = "#000000";
+            ctx.fillRect(px, py, tileSize, tileSize);
+            ctx.drawImage(avatarImg, px + 2, py + 2, tileSize - 4, tileSize - 4);
+            // No border stroke for avatar
           } else {
-            // Empty floor
-            ctx.fillStyle = "#111";
+            ctx.fillStyle = "#000000";
             ctx.fillRect(px, py, tileSize, tileSize);
+            ctx.strokeStyle = "#222222";
+            ctx.lineWidth = 1;
+            ctx.strokeRect(px, py, tileSize, tileSize);
           }
         }
       }
 
-      // Draw player as white square
-      ctx.fillStyle = "white";
-      ctx.fillRect(player.x * tileSize, player.y * tileSize, tileSize, tileSize);
+      const px = player.x * tileSize;
+      const py = player.y * tileSize;
+      ctx.fillStyle = "#FFFFFF";
+      ctx.fillRect(px, py, tileSize, tileSize);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(px + 1, py + 1, tileSize - 2, tileSize - 2);
     }
 
-    function canMove(x, y) {
-      if (y < 0 || y >= currentMaze.length || x < 0 || x >= currentMaze[0].length) return false;
-      return currentMaze[y][x] !== 1;
+    function celebrateAndRedirect() {
+      celebrateMsg.style.display = 'block';
+      setTimeout(() => {
+        window.parent.postMessage('mazeComplete', '*');
+      }, 2500);
     }
 
-    function movePlayer(dx, dy) {
+    function move(dx, dy) {
       if (gameOver) return;
       const newX = player.x + dx;
       const newY = player.y + dy;
-      if (canMove(newX, newY)) {
+      if (maze[newY][newX] !== 1) {
         player.x = newX;
         player.y = newY;
         drawMaze();
-        checkWin();
-      }
-    }
-
-    function checkWin() {
-      if (currentMaze[player.y][player.x] === 2) {
-        if (currentMaze === maze1) {
-          // Move to round 2 maze immediately
-          currentMaze = maze2;
-          player = { x: 1, y: 1 };
-          drawMaze();
-        } else {
-          // Game finished - show congratulations and send message
+        if (maze[newY][newX] === 2) {
           gameOver = true;
-          celebrateMsg.style.display = 'block';
-          setTimeout(() => {
-            window.parent.postMessage({ type: 'mazeComplete' }, '*');
-          }, 500);
+          celebrateAndRedirect();
         }
       }
     }
 
-    window.addEventListener('keydown', e => {
-      if (gameOver) return;
-      switch(e.key) {
-        case "ArrowUp":
-        case "w":
-          movePlayer(0, -1);
-          break;
-        case "ArrowDown":
-        case "s":
-          movePlayer(0, 1);
-          break;
-        case "ArrowLeft":
-        case "a":
-          movePlayer(-1, 0);
-          break;
-        case "ArrowRight":
-        case "d":
-          movePlayer(1, 0);
-          break;
-      }
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowUp") move(0, -1);
+      else if (e.key === "ArrowDown") move(0, 1);
+      else if (e.key === "ArrowLeft") move(-1, 0);
+      else if (e.key === "ArrowRight") move(1, 0);
     });
 
-    document.getElementById('resetBtn').addEventListener('click', () => {
-      currentMaze = maze1;
+    document.getElementById("resetBtn").addEventListener("click", () => {
       player = { x: 1, y: 1 };
       gameOver = false;
       celebrateMsg.style.display = 'none';
       drawMaze();
     });
 
-    window.addEventListener('resize', resizeCanvas);
-
-    // Initial draw and canvas sizing
-    resizeCanvas();
+    avatarImg.onload = () => {
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+    };
   </script>
 </body>
 </html>
