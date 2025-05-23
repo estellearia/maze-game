@@ -2,90 +2,209 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=400, initial-scale=1" />
   <title>Maze Game</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-    :root {
-      --canvas-size: 90vw;
-      --max-canvas-size: 360px;
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #111;
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      overflow: hidden;
+    }
+    #skipBtn {
+      position: fixed;
+      top: 18px;
+      right: 22px;
+      background: #111;
+      border: 2px solid #fff;
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      padding: 4px 15px;
+      cursor: pointer;
+      border-radius: 0;
+      transition: background 0.2s, color 0.2s;
+      z-index: 2001;
+      text-shadow: 0 1px 0 #000;
+      display: block;
+    }
+    #skipBtn:hover {
+      background: #fff;
+      color: #111;
     }
 
-    body {
-      margin: 0;
-      font-family: 'Press Start 2P', monospace;
-      background: black;
-      color: white;
+    #centerer {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #uiContainer {
+      background: #181818;
+      border: 3px solid #fff;
+      border-radius: 6px;
+      box-shadow: 0 0 0 6px #000;
+      width: 400px;
+      min-width: 400px;
+      max-width: 400px;
+      height: 510px;
+      min-height: 510px;
+      max-height: 510px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      position: relative;
+      justify-content: flex-start;
+      overflow: hidden;
     }
-
-    canvas {
-      width: min(var(--canvas-size), var(--max-canvas-size));
-      height: auto;
-      border: 3px solid white;
-      background: #000;
-      image-rendering: pixelated;
-      image-rendering: crisp-edges;
-      image-rendering: -moz-crisp-edges;
-      image-rendering: -webkit-optimize-contrast;
-    }
-
-    #instructions {
-      margin-top: 10px;
+    #narration {
       font-size: 10px;
-      color: #87cefa;
-      max-width: 80vw;
+      color: #ffe066;
+      margin: 18px 0 6px 0;
+      min-height: 36px;
+      width: 90%;
       text-align: center;
+      letter-spacing: 0.03em;
+      text-shadow: 0 1px 0 #222;
+      background: transparent;
+      border: none;
+      font-family: 'Press Start 2P', monospace;
+      white-space: pre-line;
+      pointer-events: none;
+      user-select: none;
     }
-
+    #mazeWrapper {
+      width: 324px;
+      height: 324px;
+      background: #111;
+      border: 2px solid #fff;
+      border-radius: 3px;
+      box-shadow: 0 0 6px #000;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    canvas {
+      width: 320px;
+      height: 320px;
+      background: #111;
+      image-rendering: pixelated;
+      cursor: pointer;
+      display: block;
+      border-radius: 2px;
+    }
+    #instructions {
+      margin-top: 8px;
+      font-size: 9px;
+      color: #87cefa;
+      max-width: 90%;
+      text-align: center;
+      text-shadow: 0 1px 0 #111;
+    }
     #celebrateMsg {
       position: absolute;
-      top: 50%;
+      top: 44%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: black;
-      border: 2px solid white;
-      padding: 10px 20px;
-      font-size: 10px;
+      background: #222;
+      border: 2px solid #ffe066;
+      padding: 12px 28px;
+      font-size: 11px;
+      font-family: 'Press Start 2P', monospace;
       text-align: center;
       display: none;
       z-index: 10;
-      white-space: nowrap;
+      white-space: pre-line;
+      color: #ffe066;
+      border-radius: 5px;
+      box-shadow: 0 0 8px #ffe06644;
+      letter-spacing: 0.06em;
+      text-shadow: 0 0 2px #000;
     }
-
-    button {
-      margin-top: 10px;
+    #resetBtn {
+      margin-top: 12px;
       font-family: 'Press Start 2P', monospace;
-      font-size: 8px;
-      padding: 4px 8px;
-      background: black;
-      color: white;
-      border: 2px solid white;
+      font-size: 10px;
+      padding: 6px 18px;
+      background: #111;
+      color: #fff;
+      border: 2px solid #fff;
       cursor: pointer;
+      border-radius: 0;
+      box-shadow: 0 0 0 3px #000;
+      letter-spacing: 0.03em;
+      transition: background 0.15s, color 0.15s;
+      text-shadow: 0 1px 0 #000;
     }
-
-    button:hover {
-      background: white;
-      color: black;
+    #resetBtn:hover {
+      background: #fff;
+      color: #111;
+    }
+    @media (max-width: 450px) {
+      #uiContainer {
+        width: 100vw;
+        min-width: unset;
+        max-width: 100vw;
+        height: 100vh;
+        min-height: unset;
+        max-height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      #mazeWrapper { width: 94vw; height: 94vw;}
+      canvas { width: 92vw !important; height: 92vw !important; }
     }
   </style>
 </head>
 <body>
-
-  <canvas id="maze" width="400" height="400"></canvas>
-  <div id="instructions">Use arrow keys to move the white square to reach Aria.</div>
-  <div id="celebrateMsg">CONGRATULATIONS! YOU MADE IT!</div>
-  <button id="resetBtn">Reset Game</button>
-
+  <button id="skipBtn" title="Skip the maze">Skip</button>
+  <div id="centerer">
+    <div id="uiContainer">
+      <div id="narration"></div>
+      <div id="mazeWrapper">
+        <canvas id="maze" width="320" height="320"></canvas>
+      </div>
+      <div id="instructions">Use arrow keys to move the white square to reach Aria.</div>
+      <div id="celebrateMsg">CONGRATULATIONS! YOU MADE IT!</div>
+      <button id="resetBtn">Reset Game</button>
+    </div>
+  </div>
   <script>
+    document.getElementById('skipBtn').onclick = function() {
+      window.parent.postMessage('mazeComplete', '*');
+    };
+
+    // Pixelated narration like other games
+    const narrationText =
+      "A maze blocks your path.\nFind your way.\nCan you reach Aria at the end?";
+
+    function typeNarration(text, cb) {
+      const el = document.getElementById('narration');
+      el.textContent = "";
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          el.textContent += text[i++];
+          setTimeout(type, text[i-1] === "\n" ? 200 : 28);
+        } else if (cb) {
+          cb();
+        }
+      }
+      type();
+    }
+
     const canvas = document.getElementById("maze");
     const ctx = canvas.getContext("2d");
     const celebrateMsg = document.getElementById('celebrateMsg');
+    typeNarration(narrationText);
 
     const avatarImg = new Image();
     avatarImg.src = "https://i.imgur.com/9OC7GRw.gif";
@@ -116,13 +235,6 @@
     let player = { x: 1, y: 1 };
     let gameOver = false;
 
-    function resizeCanvas() {
-      const displayWidth = Math.min(window.innerWidth * 0.9, 360);
-      canvas.width = displayWidth;
-      canvas.height = displayWidth;
-      drawMaze();
-    }
-
     function drawMaze() {
       const tileSize = canvas.width / maze[0].length;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -142,7 +254,6 @@
             ctx.fillStyle = "#000000";
             ctx.fillRect(px, py, tileSize, tileSize);
             ctx.drawImage(avatarImg, px + 2, py + 2, tileSize - 4, tileSize - 4);
-            // No border stroke for avatar
           } else {
             ctx.fillStyle = "#000000";
             ctx.fillRect(px, py, tileSize, tileSize);
@@ -165,7 +276,7 @@
     function celebrateAndRedirect() {
       celebrateMsg.style.display = 'block';
       setTimeout(() => {
-        window.location.href = "https://estellearia.github.io/aria-messages/fragment3.html";
+        window.parent.postMessage('mazeComplete', '*');
       }, 2500);
     }
 
@@ -199,8 +310,7 @@
     });
 
     avatarImg.onload = () => {
-      resizeCanvas();
-      window.addEventListener("resize", resizeCanvas);
+      drawMaze();
     };
   </script>
 </body>
