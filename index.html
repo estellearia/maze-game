@@ -182,8 +182,9 @@
     </div>
   </div>
   <script>
+    // Skip button takes you to fragment3.html
     document.getElementById('skipBtn').onclick = function() {
-      window.parent.postMessage('mazeComplete', '*');
+      window.location.href = "https://estellearia.github.io/aria-messages/fragment3.html";
     };
 
     // Pixelated narration like other games
@@ -197,7 +198,7 @@
       function type() {
         if (i < text.length) {
           el.textContent += text[i++];
-          setTimeout(type, text[i-1] === "\n" ? 200 : 50);
+          setTimeout(type, text[i-1] === "\n" ? 200 : 28);
         } else if (cb) {
           cb();
         }
@@ -280,7 +281,7 @@
     function celebrateAndRedirect() {
       celebrateMsg.style.display = 'block';
       setTimeout(() => {
-        window.parent.postMessage('mazeComplete', '*');
+        window.location.href = "https://estellearia.github.io/aria-messages/fragment3.html";
       }, 2500);
     }
 
