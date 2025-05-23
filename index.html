@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=400, initial-scale=1" />
+  <meta name="viewport" content="width=480, initial-scale=1" />
   <title>Maze Game</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -51,12 +51,12 @@
       border: 3px solid #fff;
       border-radius: 6px;
       box-shadow: 0 0 0 6px #000;
-      width: 400px;
-      min-width: 400px;
-      max-width: 400px;
-      height: 510px;
-      min-height: 510px;
-      max-height: 510px;
+      width: 480px;
+      min-width: 480px;
+      max-width: 480px;
+      height: 600px;
+      min-height: 600px;
+      max-height: 600px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -65,11 +65,11 @@
       overflow: hidden;
     }
     #narration {
-      font-size: 10px;
+      font-size: 12px;
       color: #ffe066;
-      margin: 18px 0 6px 0;
+      margin: 20px 0 12px 0;
       min-height: 36px;
-      width: 90%;
+      width: 93%;
       text-align: center;
       letter-spacing: 0.03em;
       text-shadow: 0 1px 0 #222;
@@ -81,20 +81,20 @@
       user-select: none;
     }
     #mazeWrapper {
-      width: 324px;
-      height: 324px;
+      width: 420px;
+      height: 420px;
       background: #111;
       border: 2px solid #fff;
       border-radius: 3px;
       box-shadow: 0 0 6px #000;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     canvas {
-      width: 320px;
-      height: 320px;
+      width: 416px;
+      height: 416px;
       background: #111;
       image-rendering: pixelated;
       cursor: pointer;
@@ -102,10 +102,10 @@
       border-radius: 2px;
     }
     #instructions {
-      margin-top: 8px;
-      font-size: 9px;
+      margin-top: 10px;
+      font-size: 11px;
       color: #87cefa;
-      max-width: 90%;
+      max-width: 95%;
       text-align: center;
       text-shadow: 0 1px 0 #111;
     }
@@ -117,7 +117,7 @@
       background: #222;
       border: 2px solid #ffe066;
       padding: 12px 28px;
-      font-size: 11px;
+      font-size: 13px;
       font-family: 'Press Start 2P', monospace;
       text-align: center;
       display: none;
@@ -130,10 +130,10 @@
       text-shadow: 0 0 2px #000;
     }
     #resetBtn {
-      margin-top: 12px;
+      margin-top: 14px;
       font-family: 'Press Start 2P', monospace;
-      font-size: 10px;
-      padding: 6px 18px;
+      font-size: 12px;
+      padding: 7px 24px;
       background: #111;
       color: #fff;
       border: 2px solid #fff;
@@ -148,7 +148,7 @@
       background: #fff;
       color: #111;
     }
-    @media (max-width: 450px) {
+    @media (max-width: 520px) {
       #uiContainer {
         width: 100vw;
         min-width: unset;
@@ -159,8 +159,12 @@
         border-radius: 0;
         box-shadow: none;
       }
-      #mazeWrapper { width: 94vw; height: 94vw;}
-      canvas { width: 92vw !important; height: 92vw !important; }
+      #mazeWrapper { width: 97vw; height: 97vw;}
+      canvas { width: 95vw !important; height: 95vw !important; }
+      #narration { font-size: 10px; }
+      #instructions { font-size: 9px; }
+      #celebrateMsg { font-size: 10px; }
+      #resetBtn { font-size: 10px; }
     }
   </style>
 </head>
@@ -170,10 +174,10 @@
     <div id="uiContainer">
       <div id="narration"></div>
       <div id="mazeWrapper">
-        <canvas id="maze" width="320" height="320"></canvas>
+        <canvas id="maze" width="416" height="416"></canvas>
       </div>
       <div id="instructions">Use arrow keys to move the white square to reach Aria.</div>
-      <div id="celebrateMsg">CONGRATULATIONS! YOU MADE IT!</div>
+      <div id="celebrateMsg">CONGRATULATIONS!<br>YOU MADE IT!</div>
       <button id="resetBtn">Reset Game</button>
     </div>
   </div>
